@@ -1,8 +1,3 @@
-# Advanced-Calculator
-This repository contains the code for a Simple Calculator application, designed for basic arithmetic operations. It is a lightweight, user-friendly tool perfect for everyday calculations.
-
----
-
 # Simple React Calculator
 
 This repository contains the code for a simple calculator built using React and NextUI. The calculator performs basic arithmetic operations and includes a user-friendly interface.
@@ -66,8 +61,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-For any questions or suggestions, please contact [your email] or open an issue in the repository.
+For any questions or suggestions, please contact ayutmg456@gmail.com or open an issue in the repository.
 
 ---
-
-Feel free to customize this `README.md` file to better fit the specifics of your project and any additional features it may have.
