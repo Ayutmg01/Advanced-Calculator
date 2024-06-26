@@ -1,81 +1,81 @@
-'use client'
-import { Button } from '@nextui-org/react'
+'use client' // This directive ensures that the component is rendered on the client side.
 import React, { useState } from 'react'
+import { BsFillEmojiAngryFill } from "react-icons/bs";
+import { ImHappy2 } from "react-icons/im";
+import { SlLike } from "react-icons/sl";
+import { FcLike } from "react-icons/fc";
+import { Button } from '@nextui-org/button';
 
-const Home = () => {
-    const calcInput = [
-        ['C', '%', '⌫', '/'],
-        ['7', '8', '9', '*'],
-        ['4', '5', '6', '-'],
-        ['1', '2', '3', '+'],
-        ['00', '0', '.', '=']
-    ]
+const Reaction = () => {
+  // State to manage the count of different reactions
+  const [postReactions, setPostReactions] = useState({
+    angry: 5,
+    wow: 1,
+    like: 20,
+    love: 3
+  });
 
-    const whiteColorGang = ['C', '%', '⌫']
-    const orangeColorGang = ['/', '*', '-', '+', '=']
-    let [number, setNumber] = useState('')
+  // State to control the visibility of the reaction selection div
+  const [isReactionDivOpen, setIsReactionDivOpen] = useState(false);
 
-    const generateClassName = (val) => {
-        if (orangeColorGang.includes(val)) {
-            return 'p-2 bg-orange-400 m-1 w-16 h-16 rounded-xl'
-        } else if (whiteColorGang.includes(val)) {
-            return 'p-2 bg-white m-1 w-16 h-16 rounded-xl'
-        } else {
-            return 'p-2 bg-gray-400 m-1 w-16 h-16 rounded-xl'
-        }
+  // State to keep track of the currently selected reaction type
+  const [reactionType, setReactionType] = useState(null);
+
+  // Function to handle reaction change
+  const handleReactionChange = (newReaction) => {
+    // Create a copy of the current reactions
+    const reactionsBckUp = { ...postReactions };
+
+    // If the same reaction type is clicked, decrement its count and reset the reaction type
+    if (newReaction === reactionType) {
+      reactionsBckUp[newReaction]--;
+      setReactionType(null);
+    } else {
+      // Otherwise, increment the new reaction type's count and set it as the current reaction type
+      reactionsBckUp[newReaction]++;
+      setReactionType(newReaction);
     }
+    // Update the state with the new reactions
+    setPostReactions(reactionsBckUp);
+  };
 
-    const handleClick = (val) => {
-        if (val === 'C') {
-            setNumber('')
-        } else if (val === '⌫') {
-            setNumber(number.slice(0, -1))
-        } else if (val === '=') {
-            if (number === '' || orangeColorGang.includes(number.slice(-1))) {
-                return
-            }
-            try {
-                setNumber(eval(number.replace(/%/g, '/100')).toString())
-            } catch {
-                setNumber('Error')
-            }
-        } else if (orangeColorGang.includes(val)) {
-            if (number === '' || orangeColorGang.includes(number.slice(-1))) {
-                return
-            } else {
-                setNumber(number + val)
-            }
-        } else if (val === '%') {
-            if (number === '' || orangeColorGang.includes(number.slice(-1))) {
-                return
-            } else {
-                setNumber(number + val)
-            }
-        } else {
-            setNumber(number + val)
-        }
+  // Function to generate the selected reaction component
+  const generateSelectedReaction = () => {
+    if (reactionType === 'angry') {
+      return <BsFillEmojiAngryFill onClick={() => handleReactionChange('angry')} size={80} color='crimson' />;
+    } else if (reactionType === 'wow') {
+      return <ImHappy2 size={80} onClick={() => handleReactionChange('wow')} color="#FFDD8B" />;
+    } else if (reactionType === 'love') {
+      return <FcLike onClick={() => handleReactionChange('love')} size={80} color="#FFDD8B" />;
+    } else {
+      return <SlLike onClick={() => handleReactionChange('like')} size={80} color={reactionType && "#89CFF0"} />;
     }
+  };
 
-    return (
-        <div className='m-auto p-4 flex flex-col items-center border border-black w-[360px] bg-black rounded-lg'>
-            <div className='bg-white text-black p-4 text-right text-xl w-full rounded-t-lg'>
-                {number || '0'}
-            </div>
-            {calcInput.map((item, rowIndex) => (
-                <div className='flex w-full justify-center' key={rowIndex}>
-                    {item.map((val) => (
-                        <Button
-                            className={generateClassName(val)}
-                            onClick={() => handleClick(val)}
-                            key={val}
-                        >
-                            {val}
-                        </Button>
-                    ))}
-                </div>
-            ))}
+  return (
+    <div>
+      {/* Display the reaction selection div if isReactionDivOpen is true */}
+      {isReactionDivOpen && (
+        <div className='flex gap-4 p-2 mt-4 ml-4 shadow-lg border justify-center items-center bg-white border-gray-400 w-[30%] rounded-lg'>
+          <SlLike size={reactionType === 'like' ? 140 : 80} onClick={() => handleReactionChange('like')} color="#89CFF0" />
+          <BsFillEmojiAngryFill size={reactionType === 'angry' ? 140 : 80} onClick={() => handleReactionChange('angry')} color='crimson' />
+          <ImHappy2 size={reactionType === 'wow' ? 140 : 80} onClick={() => handleReactionChange('wow')} color="#FFDD8B" />
+          <FcLike size={reactionType === 'love' ? 140 : 80} onClick={() => handleReactionChange('love')} color="crimson" />
         </div>
-    )
+      )}
+      {/* Display the selected reaction or the default like reaction */}
+      <div className='m-2 shadow-lg w-20' onMouseEnter={() => setIsReactionDivOpen(true)}>
+        {generateSelectedReaction()}
+      </div>
+      {/* Display the count of each reaction type */}
+      <div className='flex gap-6 shadow-lg m-4'>
+        <div>angry: {postReactions.angry}</div>
+        <div>wow: {postReactions.wow}</div>
+        <div>like: {postReactions.like}</div>
+        <div>love: {postReactions.love}</div>
+      </div>
+    </div>
+  );
 }
 
-export default Home
+export default Reaction;
